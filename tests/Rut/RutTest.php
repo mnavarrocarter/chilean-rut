@@ -1,15 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mnavarro
- * Date: 07-08-18
- * Time: 23:45
+
+/*
+ * This file is part of the MNC\ChileanRut library.
+ *
+ * (c) Matías Navarro Carter <mnavarrocarter@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace MNC\ChileanRut\Tests\Rut;
 
 use MNC\ChileanRut\Exception\InvalidRutException;
-use MNC\ChileanRut\Rut\Rut;
+use MNC\ChileanRut\Rut;
 use MNC\ChileanRut\Validator\SimpleRutValidator;
 use PHPUnit\Framework\TestCase;
 
@@ -19,8 +21,8 @@ class RutTest extends TestCase
     {
         $rut = Rut::fromString('16.894.365-2');
 
-        $this->assertEquals('16894365', $rut->getCorrelative());
-        $this->assertEquals('2', $rut->getVerifierDigit());
+        $this->assertSame('16894365', $rut->getCorrelative());
+        $this->assertSame('2', $rut->getVerifierDigit());
     }
 
     public function testThatRutsInstantiatedDifferentFormatButWithEqualValueAreIndeedEqual()
@@ -33,19 +35,25 @@ class RutTest extends TestCase
     public function testThatFormatClearWorks()
     {
         $rut = new Rut('16.894.365-2');
-        $this->assertEquals('168943652', $rut->format(Rut::FORMAT_CLEAR));
+        $this->assertSame('168943652', $rut->format(Rut::FORMAT_CLEAR));
     }
 
     public function testThatFormatWithHyphenWorks()
     {
         $rut = new Rut('16.894.365-2');
-        $this->assertEquals('16894365-2', $rut->format(Rut::FORMAT_HYPHENED));
+        $this->assertSame('16894365-2', $rut->format(Rut::FORMAT_HYPHENED));
     }
 
     public function testThatFormatReadableWorks()
     {
         $rut = new Rut('168943652');
-        $this->assertEquals('16.894.365-2', $rut->format(Rut::FORMAT_READABLE));
+        $this->assertSame('16.894.365-2', $rut->format(Rut::FORMAT_READABLE));
+    }
+
+    public function testThatFormatHiddenWorks()
+    {
+        $rut = new Rut('168943652');
+        $this->assertSame('16.***.***-2', $rut->format(Rut::FORMAT_HIDDEN));
     }
 
     public function testThatIntegratedValidationThrowsExceptionOnInvalidRut()
@@ -62,5 +70,13 @@ class RutTest extends TestCase
         $rut = new Rut('16.894.365-2', $validator);
 
         $this->assertInstanceOf(Rut::class, $rut);
+    }
+
+    public function testInvalidFormatValueRaisesException()
+    {
+        $rut = new Rut('16.894.365-2');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $rut->format(23);
     }
 }

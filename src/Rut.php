@@ -1,11 +1,20 @@
 <?php
 
-namespace MNC\ChileanRut\Rut;
+/*
+ * This file is part of the MNC\ChileanRut library.
+ *
+ * (c) Matías Navarro Carter <mnavarrocarter@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace MNC\ChileanRut;
 
 use MNC\ChileanRut\Validator\RutValidator;
 
 /**
- * Class Rut
+ * Class Rut.
+ *
  * @author Matías Navarro Carter <mnavarro@option.cl>
  */
 class Rut
@@ -13,6 +22,7 @@ class Rut
     public const FORMAT_HYPHENED = 0;   // 14533535-5
     public const FORMAT_CLEAR = 1;      // 145335355
     public const FORMAT_READABLE = 2;   // 14.533.535-5
+    public const FORMAT_HIDDEN = 3;     // 17.***.***-5
 
     /**
      * @var string
@@ -25,8 +35,9 @@ class Rut
 
     /**
      * Rut constructor.
+     *
      * @param string            $rut
-     * @param RutValidator|null $validator if provided validates the Rut.
+     * @param RutValidator|null $validator if provided validates the Rut
      */
     public function __construct(string $rut, RutValidator $validator = null)
     {
@@ -40,8 +51,17 @@ class Rut
     }
 
     /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->format(self::FORMAT_READABLE);
+    }
+
+    /**
      * @param string $correlative
      * @param string $verifierDigit
+     *
      * @return Rut
      */
     public static function fromParts(string $correlative, string $verifierDigit): Rut
@@ -51,6 +71,7 @@ class Rut
 
     /**
      * @param string $rut
+     *
      * @return Rut
      */
     public static function fromString(string $rut): Rut
@@ -60,6 +81,7 @@ class Rut
 
     /**
      * @param Rut $rut
+     *
      * @return bool
      */
     public function isEqualTo(Rut $rut): bool
@@ -68,31 +90,26 @@ class Rut
     }
 
     /**
-     * @param string $value
-     * @return string
-     */
-    private function sanitize(string $value): string
-    {
-        $value = trim($value);
-        $value = strtoupper($value);
-        return str_replace(['.', ',', '-'], '', $value);
-    }
-
-    /**
-     * @param int $format One of the FORMAT_ constants.
+     * Formats a Rut to a string.
+     *
+     * @param int $format one of the FORMAT_ constants
+     *
      * @return string
      */
     public function format(int $format = 0): string
     {
         switch ($format) {
             case self::FORMAT_HYPHENED:
-                return $this->value . '-' . $this->dv;
+                return $this->value.'-'.$this->dv;
                 break;
             case self::FORMAT_CLEAR:
-                return $this->value . $this->dv;
+                return $this->value.$this->dv;
                 break;
             case self::FORMAT_READABLE:
-                return sprintf('%s-%s', number_format($this->value, 0, '', '.'), $this->dv);
+                return $this->formatReadable();
+                break;
+            case self::FORMAT_HIDDEN:
+                return $this->formatHidden();
                 break;
             default:
                 throw new \InvalidArgumentException(
@@ -106,6 +123,8 @@ class Rut
     }
 
     /**
+     * Returns the correlative number of the Rut.
+     *
      * @return string
      */
     public function getCorrelative(): string
@@ -114,6 +133,8 @@ class Rut
     }
 
     /**
+     * Returns the verifier digit of the Rut.
+     *
      * @return string
      */
     public function getVerifierDigit(): string
@@ -122,10 +143,36 @@ class Rut
     }
 
     /**
+     * Sanitizes a Rut string.
+     *
+     * @param string $value
+     *
      * @return string
      */
-    public function __toString(): string
+    private function sanitize(string $value): string
     {
-        return $this->format(self::FORMAT_READABLE);
+        $value = trim($value);
+        $value = strtoupper($value);
+
+        return str_replace(['.', ',', '-'], '', $value);
+    }
+
+    /**
+     * @return string
+     */
+    private function formatReadable(): string
+    {
+        return sprintf('%s-%s', number_format($this->value, 0, '', '.'), $this->dv);
+    }
+
+    /**
+     * @return string
+     */
+    private function formatHidden(): string
+    {
+        $readable = $this->formatReadable();
+        $exploded = explode('.', $readable);
+
+        return sprintf('%s.***.***-%s', $exploded[0], $this->dv);
     }
 }

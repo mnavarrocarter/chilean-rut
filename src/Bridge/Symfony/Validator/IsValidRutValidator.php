@@ -1,9 +1,17 @@
 <?php
 
+/*
+ * This file is part of the MNC\ChileanRut library.
+ *
+ * (c) Matías Navarro Carter <mnavarrocarter@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace MNC\ChileanRut\Bridge\Symfony\Validator;
 
 use MNC\ChileanRut\Exception\InvalidRutException;
-use MNC\ChileanRut\Rut\Rut;
+use MNC\ChileanRut\Rut;
 use MNC\ChileanRut\Validator\RutValidator;
 use MNC\ChileanRut\Validator\SimpleRutValidator;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
@@ -11,8 +19,8 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Class IsValidRutValidator
- * @package MNC\ChileanRut\Bridge\Symfony\Validator
+ * Class IsValidRutValidator.
+ *
  * @author Matías Navarro Carter <mnavarro@option.cl>
  */
 class IsValidRutValidator extends ConstraintValidator

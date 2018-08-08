@@ -18,7 +18,8 @@
         "phpunit/phpunit": "^7.3",
         "doctrine/dbal": "^2.5",
         "symfony/form": "^3.4|^4.0",
-        "symfony/validator": "^3.4|^4.0"
+        "symfony/validator": "^3.4|^4.0",
+        "symfony/var-dumper": "^4.1"
     },
     "autoload": {
         "psr-4": {

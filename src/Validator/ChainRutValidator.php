@@ -1,12 +1,20 @@
 <?php
 
+/*
+ * This file is part of the MNC\ChileanRut library.
+ *
+ * (c) Matías Navarro Carter <mnavarrocarter@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace MNC\ChileanRut\Validator;
 
 use MNC\ChileanRut\Exception\InvalidRutException;
-use MNC\ChileanRut\Rut\Rut;
+use MNC\ChileanRut\Rut;
 
 /**
- * A ChainRutValidator
+ * A ChainRutValidator.
  *
  * Use this implementation when you want to validate a Rut against multiple
  * validators. Add the validators in order by calling addValidator().
@@ -29,18 +37,23 @@ class ChainRutValidator implements RutValidator
     }
 
     /**
+     * Appends a RutValidator instance to the validation chain.
+     *
      * @param RutValidator $validator
+     *
      * @return ChainRutValidator
      */
-    public function addValidator(RutValidator $validator): ChainRutValidator
+    public function append(RutValidator $validator): ChainRutValidator
     {
         $this->validators[] = $validator;
+
         return $this;
     }
 
     /**
      * @param Rut $rut
-     * @throws InvalidRutException on invalid Rut.
+     *
+     * @throws InvalidRutException on invalid Rut
      */
     public function validate(Rut $rut): void
     {
