@@ -9,6 +9,14 @@ y un *type* para `doctrine/dbal`.
 
 Sólo es compatible con PHP 7.1 o superior.
 
+## Instalación
+
+Esta libería funciona con composer:
+
+```
+composer require mnavarrocarter/chilean-rut
+```
+
 ## Uso
 Simplemente instancia una nueva clase con un rut en cualquier formato:
 
