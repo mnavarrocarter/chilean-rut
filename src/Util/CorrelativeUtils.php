@@ -68,8 +68,6 @@ class CorrelativeUtils
      * Auto-generates an algorithmically valid Rut, because why not.
      *
      * @return Rut
-     *
-     * @throws \Exception on insufficient entropy on correlative generation
      */
     public static function autoGenerateValidRut(): Rut
     {

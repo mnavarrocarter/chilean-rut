@@ -17,5 +17,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class IsValidRut extends Constraint
 {
-    public $message = 'The rut "{{value}}" is not valid.';
+    public $message = '"{{value}}" is not a valid Rut.';
 }

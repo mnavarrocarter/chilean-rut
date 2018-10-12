@@ -17,7 +17,7 @@ use MNC\ChileanRut\Rut;
  * This is the base contract for a Rut validator.
  *
  * You can implement any logic here that you can use to validate a Rut.
- * For example, the SimpleRutValidator only validates that a Rut is algorithmically
+ * For example, the Module11RutValidator only validates that a Rut is algorithmically
  * correct, but not that it actually exists.
  *
  * You could create a HTTPRutValidator that performs a request to validate that a

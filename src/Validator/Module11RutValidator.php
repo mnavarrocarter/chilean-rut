@@ -19,7 +19,7 @@ use MNC\ChileanRut\Util\CorrelativeUtils;
  *
  * @author Matías Navarro Carter <mnavarro@option.cl>
  */
-class SimpleRutValidator implements RutValidator
+class Module11RutValidator implements RutValidator
 {
     /**
      * @param Rut $rut

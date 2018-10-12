@@ -1,0 +1,16 @@
+language: php
+dist: precise
+php:
+    - '7.1'
+    - '7.2'
+    - nightly
+sudo: false
+cache:
+    directories:
+        - $HOME/.composer/cache
+
+before_script:
+    - travis_retry composer self-update
+    - travis_retry composer install --no-interaction --prefer-dist
+
+script: composer run test

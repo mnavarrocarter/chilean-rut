@@ -30,24 +30,12 @@ class ChainRutValidator implements RutValidator
 
     /**
      * ChainRutValidator constructor.
-     */
-    public function __construct()
-    {
-        $this->validators = [];
-    }
-
-    /**
-     * Appends a RutValidator instance to the validation chain.
      *
-     * @param RutValidator $validator
-     *
-     * @return ChainRutValidator
+     * @param RutValidator[] $validators
      */
-    public function append(RutValidator $validator): ChainRutValidator
+    public function __construct(RutValidator ...$validators)
     {
-        $this->validators[] = $validator;
-
-        return $this;
+        $this->validators = $validators;
     }
 
     /**

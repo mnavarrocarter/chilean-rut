@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1539368191">
+  <project timestamp="1539368191">
+    <package name="MNC\ChileanRut\Bridge\Doctrine\DBAL\Types">
+      <file name="/home/mnavarro/code-hosted/github.com/mnavarrocarter/chilean-rut/src/Bridge/Doctrine/DBAL/Types/RutType.php">
+        <class name="MNC\ChileanRut\Bridge\Doctrine\DBAL\Types\RutType" namespace="MNC\ChileanRut\Bridge\Doctrine\DBAL\Types">
+          <metrics complexity="7" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="0" elements="21" coveredelements="0"/>
+        </class>
+        <line num="30" type="method" name="getName" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="31" type="stmt" count="0"/>
+        <line num="32" type="stmt" count="0"/>
+        <line num="33" type="stmt" count="0"/>
+        <line num="43" type="method" name="convertToDatabaseValue" visibility="public" complexity="3" crap="12.00" count="0"/>
+        <line num="44" type="stmt" count="0"/>
+        <line num="45" type="stmt" count="0"/>
+        <line num="46" type="stmt" count="0"/>
+        <line num="47" type="stmt" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="50" type="stmt" count="0"/>
+        <line num="51" type="stmt" count="0"/>
+        <line num="53" type="stmt" count="0"/>
+        <line num="54" type="stmt" count="0"/>
+        <line num="62" type="method" name="convertToPHPValue" visibility="public" complexity="3" crap="12.00" count="0"/>
+        <line num="63" type="stmt" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <line num="65" type="stmt" count="0"/>
+        <line num="66" type="stmt" count="0"/>
+        <line num="68" type="stmt" count="0"/>
+        <line num="69" type="stmt" count="0"/>
+        <metrics loc="70" ncloc="41" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="0" elements="21" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="MNC\ChileanRut\Bridge\Symfony\Form">
+      <file name="/home/mnavarro/code-hosted/github.com/mnavarrocarter/chilean-rut/src/Bridge/Symfony/Form/RutType.php">
+        <class name="MNC\ChileanRut\Bridge\Symfony\Form\RutType" namespace="MNC\ChileanRut\Bridge\Symfony\Form">
+          <metrics complexity="7" methods="5" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="10" elements="17" coveredelements="13"/>
+        </class>
+        <line num="27" type="method" name="buildForm" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="29" type="stmt" count="1"/>
+        <line num="30" type="stmt" count="1"/>
+        <line num="35" type="method" name="configureOptions" visibility="public" complexity="1" crap="1.01" count="1"/>
+        <line num="37" type="stmt" count="1"/>
+        <line num="38" type="stmt" count="1"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="42" type="stmt" count="1"/>
+        <line num="44" type="stmt" count="1"/>
+        <line num="49" type="method" name="getBlockPrefix" visibility="public" complexity="2" crap="2" count="1"/>
+        <line num="51" type="stmt" count="1"/>
+        <line num="59" type="method" name="transform" visibility="public" complexity="2" crap="2.15" count="1"/>
+        <line num="61" type="stmt" count="1"/>
+        <line num="62" type="stmt" count="0"/>
+        <line num="64" type="stmt" count="1"/>
+        <line num="71" type="method" name="reverseTransform" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="73" type="stmt" count="1"/>
+        <metrics loc="75" ncloc="47" classes="1" methods="5" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="10" elements="17" coveredelements="13"/>
+      </file>
+    </package>
+    <package name="MNC\ChileanRut\Bridge\Symfony\Validator">
+      <file name="/home/mnavarro/code-hosted/github.com/mnavarrocarter/chilean-rut/src/Bridge/Symfony/Validator/IsValidRut.php">
+        <class name="MNC\ChileanRut\Bridge\Symfony\Validator\IsValidRut" namespace="MNC\ChileanRut\Bridge\Symfony\Validator">
+          <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+        </class>
+        <metrics loc="21" ncloc="11" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </file>
+      <file name="/home/mnavarro/code-hosted/github.com/mnavarrocarter/chilean-rut/src/Bridge/Symfony/Validator/IsValidRutValidator.php">
+        <class name="MNC\ChileanRut\Bridge\Symfony\Validator\IsValidRutValidator" namespace="MNC\ChileanRut\Bridge\Symfony\Validator">
+          <metrics complexity="6" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="0" elements="20" coveredelements="0"/>
+        </class>
+        <line num="38" type="method" name="__construct" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="39" type="stmt" count="0"/>
+        <line num="40" type="stmt" count="0"/>
+        <line num="41" type="stmt" count="0"/>
+        <line num="47" type="method" name="validate" visibility="public" complexity="5" crap="30.00" count="0"/>
+        <line num="48" type="stmt" count="0"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="50" type="stmt" count="0"/>
+        <line num="51" type="stmt" count="0"/>
+        <line num="53" type="stmt" count="0"/>
+        <line num="54" type="stmt" count="0"/>
+        <line num="55" type="stmt" count="0"/>
+        <line num="57" type="stmt" count="0"/>
+        <line num="58" type="stmt" count="0"/>
+        <line num="59" type="stmt" count="0"/>
+        <line num="60" type="stmt" count="0"/>
+        <line num="61" type="stmt" count="0"/>
+        <line num="62" type="stmt" count="0"/>
+        <line num="63" type="stmt" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <metrics loc="65" ncloc="41" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="18" coveredstatements="0" elements="20" coveredelements="0"/>
+      </file>
+    </package>
+    <package name="MNC\ChileanRut\Exception">
+      <file name="/home/mnavarro/code-hosted/github.com/mnavarrocarter/chilean-rut/src/Exception/InvalidRutException.php">
+        <class name="MNC\ChileanRut\Exception\InvalidRutException" namespace="MNC\ChileanRut\Exception">
+          <metrics complexity="3" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="5" elements="8" coveredelements="6"/>
+        </class>
+        <line num="33" type="method" name="__construct" visibility="public" complexity="2" crap="2" count="3"/>
+        <line num="35" type="stmt" count="3"/>
+        <line num="36" type="stmt" count="3"/>
+        <line num="38" type="stmt" count="3"/>
+        <line num="39" type="stmt" count="3"/>
+        <line num="40" type="stmt" count="3"/>
+        <line num="45" type="method" name="getRut" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="47" type="stmt" count="0"/>
+        <metrics loc="49" ncloc="25" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="5" elements="8" coveredelements="6"/>
+      </file>
+    </package>
+    <package name="MNC\ChileanRut">
+      <file name="/home/mnavarro/code-hosted/github.com/mnavarrocarter/chilean-rut/src/Rut.php">
+        <class name="MNC\ChileanRut\Rut" namespace="MNC\ChileanRut">
+          <metrics complexity="16" methods="11" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="31" coveredstatements="30" elements="42" coveredelements="40"/>
+        </class>
+        <line num="45" type="method" name="__construct" visibility="public" complexity="2" crap="2" count="14"/>
+        <line num="47" type="stmt" count="14"/>
+        <line num="48" type="stmt" count="14"/>
+        <line num="49" type="stmt" count="14"/>
+        <line num="51" type="stmt" count="14"/>
+        <line num="52" type="stmt" count="12"/>
+        <line num="54" type="stmt" count="14"/>
+        <line num="55" type="stmt" count="12"/>
+        <line num="62" type="method" name="__toString" visibility="public" complexity="1" crap="2.00" count="0"/>
+        <line num="64" type="stmt" count="0"/>
+        <line num="76" type="method" name="fromParts" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="78" type="stmt" count="2"/>
+        <line num="89" type="method" name="fromString" visibility="public" complexity="1" crap="1" count="1"/>
+        <line num="91" type="stmt" count="1"/>
+        <line num="101" type="method" name="isEqualTo" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="103" type="stmt" count="2"/>
+        <line num="113" type="method" name="format" visibility="public" complexity="5" crap="5" count="10"/>
+        <line num="116" type="stmt" count="10"/>
+        <line num="117" type="stmt" count="3"/>
+        <line num="119" type="stmt" count="7"/>
+        <line num="120" type="stmt" count="1"/>
+        <line num="122" type="stmt" count="6"/>
+        <line num="123" type="stmt" count="4"/>
+        <line num="125" type="stmt" count="2"/>
+        <line num="126" type="stmt" count="1"/>
+        <line num="129" type="stmt" count="1"/>
+        <line num="130" type="stmt" count="1"/>
+        <line num="131" type="stmt" count="1"/>
+        <line num="132" type="stmt" count="1"/>
+        <line num="133" type="stmt" count="1"/>
+        <line num="144" type="method" name="getCorrelative" visibility="public" complexity="1" crap="1" count="14"/>
+        <line num="146" type="stmt" count="14"/>
+        <line num="154" type="method" name="getVerifierDigit" visibility="public" complexity="1" crap="1" count="14"/>
+        <line num="156" type="stmt" count="14"/>
+        <line num="166" type="method" name="sanitize" visibility="private" complexity="1" crap="1" count="14"/>
+        <line num="168" type="stmt" count="14"/>
+        <line num="176" type="method" name="formatReadable" visibility="private" complexity="1" crap="1" count="5"/>
+        <line num="178" type="stmt" count="5"/>
+        <line num="186" type="method" name="formatHidden" visibility="private" complexity="1" crap="1" count="1"/>
+        <line num="188" type="stmt" count="1"/>
+        <line num="189" type="stmt" count="1"/>
+        <line num="191" type="stmt" count="1"/>
+        <metrics loc="193" ncloc="96" classes="1" methods="11" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="31" coveredstatements="30" elements="42" coveredelements="40"/>
+      </file>
+    </package>
+    <package name="MNC\ChileanRut\Util">
+      <file name="/home/mnavarro/code-hosted/github.com/mnavarrocarter/chilean-rut/src/Util/CorrelativeUtils.php">
+        <class name="MNC\ChileanRut\Util\CorrelativeUtils" namespace="MNC\ChileanRut\Util">
+          <metrics complexity="7" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="14" elements="19" coveredelements="16"/>
+        </class>
+        <line num="29" type="method" name="findVerifierDigit" visibility="public" complexity="5" crap="5.09" count="14"/>
+        <line num="31" type="stmt" count="14"/>
+        <line num="32" type="stmt" count="14"/>
+        <line num="34" type="stmt" count="14"/>
+        <line num="35" type="stmt" count="14"/>
+        <line num="36" type="stmt" count="14"/>
+        <line num="38" type="stmt" count="14"/>
+        <line num="39" type="stmt" count="14"/>
+        <line num="42" type="stmt" count="14"/>
+        <line num="44" type="stmt" count="14"/>
+        <line num="45" type="stmt" count="0"/>
+        <line num="48" type="stmt" count="14"/>
+        <line num="49" type="stmt" count="0"/>
+        <line num="52" type="stmt" count="14"/>
+        <line num="62" type="method" name="createValidRutOnlyFromCorrelative" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="64" type="stmt" count="2"/>
+        <line num="72" type="method" name="autoGenerateValidRut" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="74" type="stmt" count="2"/>
+        <line num="76" type="stmt" count="2"/>
+        <metrics loc="78" ncloc="47" classes="1" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="14" elements="19" coveredelements="16"/>
+      </file>
+    </package>
+    <package name="MNC\ChileanRut\Validator">
+      <file name="/home/mnavarro/code-hosted/github.com/mnavarrocarter/chilean-rut/src/Validator/ChainRutValidator.php">
+        <class name="MNC\ChileanRut\Validator\ChainRutValidator" namespace="MNC\ChileanRut\Validator">
+          <metrics complexity="3" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="7" coveredelements="7"/>
+        </class>
+        <line num="36" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="2"/>
+        <line num="38" type="stmt" count="2"/>
+        <line num="39" type="stmt" count="2"/>
+        <line num="46" type="method" name="validate" visibility="public" complexity="2" crap="2" count="2"/>
+        <line num="48" type="stmt" count="2"/>
+        <line num="49" type="stmt" count="2"/>
+        <line num="51" type="stmt" count="1"/>
+        <metrics loc="52" ncloc="24" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="7" coveredelements="7"/>
+      </file>
+      <file name="/home/mnavarro/code-hosted/github.com/mnavarrocarter/chilean-rut/src/Validator/Module11RutValidator.php">
+        <class name="MNC\ChileanRut\Validator\Module11RutValidator" namespace="MNC\ChileanRut\Validator">
+          <metrics complexity="2" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+        </class>
+        <line num="29" type="method" name="validate" visibility="public" complexity="2" crap="2" count="14"/>
+        <line num="31" type="stmt" count="14"/>
+        <line num="33" type="stmt" count="14"/>
+        <line num="34" type="stmt" count="2"/>
+        <line num="36" type="stmt" count="12"/>
+        <metrics loc="37" ncloc="20" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="4" elements="5" coveredelements="5"/>
+      </file>
+    </package>
+    <file name="/home/mnavarro/code-hosted/github.com/mnavarrocarter/chilean-rut/src/Validator/RutValidator.php">
+      <metrics loc="43" ncloc="12" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <metrics files="10" loc="683" ncloc="364" classes="8" methods="29" coveredmethods="19" conditionals="0" coveredconditionals="0" statements="110" coveredstatements="68" elements="139" coveredelements="87"/>
+  </project>
+</coverage>

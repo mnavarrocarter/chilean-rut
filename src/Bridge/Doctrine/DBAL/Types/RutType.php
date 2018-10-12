@@ -47,10 +47,10 @@ class RutType extends StringType
         }
 
         if ($value instanceof Rut) {
-            return parent::convertToDatabaseValue($value->format(), $platform);
+            return $value->format(Rut::FORMAT_HYPHENED);
         }
 
-        throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['null', 'Rut']);
+        throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['null', Rut::class]);
     }
 
     /**
@@ -61,8 +61,6 @@ class RutType extends StringType
      */
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        $value = parent::convertToPHPValue($value, $platform);
-
         if (null === $value || $value instanceof Rut) {
             return $value;
         }

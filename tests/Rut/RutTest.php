@@ -12,7 +12,7 @@ namespace MNC\ChileanRut\Tests\Rut;
 
 use MNC\ChileanRut\Exception\InvalidRutException;
 use MNC\ChileanRut\Rut;
-use MNC\ChileanRut\Validator\SimpleRutValidator;
+use MNC\ChileanRut\Validator\Module11RutValidator;
 use PHPUnit\Framework\TestCase;
 
 class RutTest extends TestCase
@@ -60,13 +60,13 @@ class RutTest extends TestCase
     {
         $this->expectException(InvalidRutException::class);
 
-        $validator = new SimpleRutValidator();
+        $validator = new Module11RutValidator();
         $rut = new Rut('4444444-2', $validator);
     }
 
     public function testThatIntegratedValidationDoesNotThrowExceptionOnValidRut()
     {
-        $validator = new SimpleRutValidator();
+        $validator = new Module11RutValidator();
         $rut = new Rut('16.894.365-2', $validator);
 
         $this->assertInstanceOf(Rut::class, $rut);

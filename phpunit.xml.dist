@@ -16,6 +16,10 @@
         </testsuite>
     </testsuites>
 
+    <logging>
+        <log type="coverage-clover" target="coverage.xml"/>
+    </logging>
+
     <filter>
         <whitelist>
             <directory>./src</directory>

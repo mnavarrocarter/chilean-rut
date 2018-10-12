@@ -10,10 +10,13 @@
 
 namespace MNC\ChileanRut;
 
+use MNC\ChileanRut\Validator\Module11RutValidator;
 use MNC\ChileanRut\Validator\RutValidator;
 
 /**
- * Class Rut.
+ * Rut represents a the Chilean National ID Number.
+ *
+ * All residents of Chile are uniquely identified by one of these.
  *
  * @author Matías Navarro Carter <mnavarro@option.cl>
  */
@@ -45,12 +48,15 @@ class Rut
         $this->value = substr($sanitized, 0, -1);
         $this->dv = $sanitized[\strlen($sanitized) - 1];
 
-        if (null !== $validator) {
-            $validator->validate($this);
+        if (!$validator instanceof RutValidator) {
+            $validator = new Module11RutValidator();
         }
+        $validator->validate($this);
     }
 
     /**
+     * Casts the Rut object into a string.
+     *
      * @return string
      */
     public function __toString(): string
@@ -59,27 +65,35 @@ class Rut
     }
 
     /**
-     * @param string $correlative
-     * @param string $verifierDigit
+     * Creates a new Rut instance from the correlative and the verifier digit.
+     *
+     * @param string            $correlative
+     * @param string            $verifierDigit
+     * @param RutValidator|null $validator
      *
      * @return Rut
      */
-    public static function fromParts(string $correlative, string $verifierDigit): Rut
+    public static function fromParts(string $correlative, string $verifierDigit, RutValidator $validator = null): Rut
     {
-        return new self($correlative.$verifierDigit);
+        return new self($correlative.$verifierDigit, $validator);
     }
 
     /**
-     * @param string $rut
+     * Creates a new instance of Rut from a string.
+     *
+     * @param string            $rut
+     * @param RutValidator|null $validator
      *
      * @return Rut
      */
-    public static function fromString(string $rut): Rut
+    public static function fromString(string $rut, RutValidator $validator = null): Rut
     {
-        return new self($rut);
+        return new self($rut, $validator);
     }
 
     /**
+     * Compares whether a Rut is equal to another or not.
+     *
      * @param Rut $rut
      *
      * @return bool
@@ -151,13 +165,12 @@ class Rut
      */
     private function sanitize(string $value): string
     {
-        $value = trim($value);
-        $value = strtoupper($value);
-
-        return str_replace(['.', ',', '-'], '', $value);
+        return str_replace(['.', ',', '-'], '', strtoupper(trim($value)));
     }
 
     /**
+     * Helper to format the Rut as FORMAT_READABLE.
+     *
      * @return string
      */
     private function formatReadable(): string
@@ -166,6 +179,8 @@ class Rut
     }
 
     /**
+     * Helper to format the Rut as FORMAT_HIDDEN.
+     *
      * @return string
      */
     private function formatHidden(): string

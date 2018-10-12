@@ -12,8 +12,8 @@ namespace MNC\ChileanRut\Bridge\Symfony\Validator;
 
 use MNC\ChileanRut\Exception\InvalidRutException;
 use MNC\ChileanRut\Rut;
+use MNC\ChileanRut\Validator\Module11RutValidator;
 use MNC\ChileanRut\Validator\RutValidator;
-use MNC\ChileanRut\Validator\SimpleRutValidator;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -30,9 +30,14 @@ class IsValidRutValidator extends ConstraintValidator
      */
     private $validator;
 
+    /**
+     * IsValidRutValidator constructor.
+     *
+     * @param RutValidator|null $validator
+     */
     public function __construct(RutValidator $validator = null)
     {
-        $this->validator = $validator ?? new SimpleRutValidator();
+        $this->validator = $validator ?? new Module11RutValidator();
     }
 
     /**
