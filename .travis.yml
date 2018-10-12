@@ -1,9 +1,17 @@
 language: php
+env:
+    global:
+        - CC_TEST_REPORTER_ID=d0568bbe98e5edb100c837e2b87c1f102d9d44bfd66662d4f648e7291c1d9193
 dist: precise
 php:
     - '7.1'
     - '7.2'
     - nightly
+
+matrix:
+    allow_failures:
+    - php: nightly
+
 sudo: false
 cache:
     directories:
@@ -12,5 +20,11 @@ cache:
 before_script:
     - travis_retry composer self-update
     - travis_retry composer install --no-interaction --prefer-dist
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - ./cc-test-reporter before-build
 
 script: composer run test
+
+after_script:
+    - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
