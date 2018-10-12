@@ -5,6 +5,9 @@ Rut Chileno
 [![Maintainability](https://api.codeclimate.com/v1/badges/c93bd4d894722c404cfd/maintainability)](https://codeclimate.com/github/mnavarrocarter/chilean-rut/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/c93bd4d894722c404cfd/test_coverage)](https://codeclimate.com/github/mnavarrocarter/chilean-rut/test_coverage)
 [![Latest Stable Version](https://poser.pugx.org/mnavarrocarter/chilean-rut/v/stable.svg)](https://packagist.org/packages/mnavarrocarter/chilean-rut)
+[![Latest Unstable Version](https://poser.pugx.org/mnavarrocarter/chilean-rut/v/unstable)](https://packagist.org/packages/mnavarrocarter/chilean-rut)
+[![Total Downloads](https://poser.pugx.org/mnavarrocarter/chilean-rut/downloads)](https://packagist.org/packages/mnavarrocarter/chilean-rut)
+[![License](https://poser.pugx.org/mnavarrocarter/chilean-rut/license)](https://packagist.org/packages/mnavarrocarter/chilean-rut)
 
 Esta librería implementa una clase Rut como un *value object* inmutable, incluyendo
 una api de validación flexible y extendible. 
@@ -37,19 +40,30 @@ $rut = new Rut('23.546.565-4');
 $rut = Rut::fromString('23546565-4');
 ```
 
-Por defecto, la clase Rut no se valida a sí misma, lo que puede significar que
-el objeto sea instanciado en un estado inconsistente. Si esto no te gusta, puedes pasarle
-el `SimpleRutValidator` al constructor, y el Rut será validado al momento de ser instanciado.
+Por defecto, la clase Rut se valida usando el `Module11RutValidator` si no se pasa
+un validador personalizado al momento de instanciación. Esto es para asegurar la
+integridad del objeto.
+
+Si quieres, por alguna extraña razón, deshacerte de esa validación, puedes crear
+un `AlwaysValidRutValidator` implementando la interfaz `RutValidator`. El método
+validate estaría en blanco, lo que haría pasar la validación sin problema.
 
 ```php
 <?php
-
 use MNC\ChileanRut\Rut;
-use MNC\ChileanRut\Validator\SimpleRutValidator;
+use MNC\ChileanRut\Validator\RutValidator;
 
-$rut = new Rut('23.546.565-4', new SimpleRutValidator());
+class AlwaysValidRutValidator implements RutValidator
+{
+    public function validate(Rut $rut) : void
+    {
+        // Vacío a propósito    
+    }
+}
 
-// Esto lanzará un InvalidRutException si el rut no es valido.
+// Asi, la validación pasa sin problema.
+$rut = new Rut('23.546.565-4', new AlwaysValidRutValidator());
+
 ```
 
 ### Validación Personalizada de Rut
@@ -133,7 +147,7 @@ $chainValidator->validate($rut);
 
 Una vez creado el objeto Rut, puedes formatearlo a string en el formato que tu quieras.
 Esto se hace a través del método format y cómo parámetro acepta el valor
-de una de las constantes FORMAT_ de la clase Rut.
+de una de las constantes `FORMAT_` de la clase Rut.
 
 ```php
 <?php
