@@ -32,7 +32,7 @@
         }
     },
     "scripts": {
-        "test": "@php vendor/bin/phpunit --verbose",
+        "test": "@php vendor/bin/phpunit --verbose --coverage-text --coverage-clover build/logs/clover.xml",
         "style": "@php vendor/bin/php-cs-fixer fix"
     }
 }
