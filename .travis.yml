@@ -1,7 +1,4 @@
 language: php
-env:
-    global:
-        - CC_TEST_REPORTER_ID=d0568bbe98e5edb100c837e2b87c1f102d9d44bfd66662d4f648e7291c1d9193
 dist: precise
 php:
     - '7.1'
