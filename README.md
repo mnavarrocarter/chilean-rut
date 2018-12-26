@@ -1,14 +1,6 @@
 Rut Chileno
 ===========
 
-[![Build Status](https://travis-ci.org/mnavarrocarter/chilean-rut.svg?branch=master)](https://travis-ci.org/mnavarrocarter/chilean-rut)
-[![Maintainability](https://api.codeclimate.com/v1/badges/c93bd4d894722c404cfd/maintainability)](https://codeclimate.com/github/mnavarrocarter/chilean-rut/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/c93bd4d894722c404cfd/test_coverage)](https://codeclimate.com/github/mnavarrocarter/chilean-rut/test_coverage)
-[![Latest Stable Version](https://poser.pugx.org/mnavarrocarter/chilean-rut/v/stable.svg)](https://packagist.org/packages/mnavarrocarter/chilean-rut)
-[![Latest Unstable Version](https://poser.pugx.org/mnavarrocarter/chilean-rut/v/unstable)](https://packagist.org/packages/mnavarrocarter/chilean-rut)
-[![Total Downloads](https://poser.pugx.org/mnavarrocarter/chilean-rut/downloads)](https://packagist.org/packages/mnavarrocarter/chilean-rut)
-[![License](https://poser.pugx.org/mnavarrocarter/chilean-rut/license)](https://packagist.org/packages/mnavarrocarter/chilean-rut)
-
 Esta librería implementa una clase Rut como un *value object* inmutable, incluyendo
 una api de validación flexible y extendible. 
 
