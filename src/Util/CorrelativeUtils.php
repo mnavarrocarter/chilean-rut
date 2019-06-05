@@ -67,10 +67,13 @@ class CorrelativeUtils
     /**
      * Auto-generates an algorithmically valid Rut, because why not.
      *
+     * @noinspection PhpDocMissingThrowsInspection
+     *
      * @return Rut
      */
     public static function autoGenerateValidRut(): Rut
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         $correlative = \random_int(1000000, 40000000);
 
         return static::createValidRutOnlyFromCorrelative($correlative);
