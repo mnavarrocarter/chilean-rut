@@ -1,13 +1,9 @@
 Rut Chileno
 ===========
 
-Esta librería implementa una clase Rut como un *value object* inmutable, incluyendo
-una api de validación flexible y extendible. 
+Esta librería implementa una clase Rut como un sencillo *value object* inmutable.
 
-Además, posee un validador para `symfony/validator`, un *form type* para `symfony/form`
-y un *type* para `doctrine/dbal`. 
-
-Sólo es compatible con PHP 7.1 o superior.
+Además, posee dos *types* para `doctrine/dbal`.
 
 ## Instalación
 
@@ -18,195 +14,101 @@ composer require mnavarrocarter/chilean-rut
 ```
 
 ## Uso
-Simplemente instancia una nueva clase con un rut en cualquier formato:
+
+### Parseando un Rut
+
+La clase Rut es capaz de parsear cualquier tipo de rut sin importar el formato usando
+el método `Rut::parse()`. Confiadamente puedes poner el valor directamente de un
+formulario web y `parse` se encargara de sanitizar el string y ver si el RUT es valido.
+ 
+```php
+<?php
+
+use MNC\ChileanRut\Rut;
+
+$rut = Rut::parse('23.546.565-4');
+```
+
+### Validando el Rut
+
+> TLDR: Un objeto `Rut` siempre será valido.
+
+Si tu RUT no es valido, el método `parse` lanzara una excepción de tipo
+`MNC\ChileanRut\InvalidRut`. Esto es para seguir buenos principios de *objects
+calisthenics*: un objeto de valor siempre se crea en un estado valido, y se mantiene
+valido a través de todo su ciclo de vida. No se permiten mutaciones que dejen el
+objeto en un estado invalido.
+
+Por esta razón el objecto `$rut` es completamente inmutable. Esto quiere decir
+que una vez creado no puedes cambiar su estado interno: solo puedes leer información.
+Estos son los unicos métodos que puedes usar:
 
 ```php
 <?php
 
 use MNC\ChileanRut\Rut;
 
-$rut = new Rut('23.546.565-4');
+$rut = Rut::parse('23.546.565-4');
 
-// Si prefieres, puedes usar el factory method
-
-$rut = Rut::fromString('23546565-4');
+$rut->getNumber(); // (int) 23546565
+$rut->getVerifier(); // (string) 4
 ```
 
-Por defecto, la clase Rut se valida usando el `Module11RutValidator` si no se pasa
-un validador personalizado al momento de instanciación. Esto es para asegurar la
-integridad del objeto.
+### Formateando el Rut
 
-Si quieres, por alguna extraña razón, deshacerte de esa validación, puedes crear
-un `AlwaysValidRutValidator` implementando la interfaz `RutValidator`. El método
-validate estaría en blanco, lo que haría pasar la validación sin problema.
-
-```php
-<?php
-use MNC\ChileanRut\Rut;
-use MNC\ChileanRut\Validator\RutValidator;
-
-class AlwaysValidRutValidator implements RutValidator
-{
-    public function validate(Rut $rut) : void
-    {
-        // Vacío a propósito    
-    }
-}
-
-// Asi, la validación pasa sin problema.
-$rut = new Rut('23.546.565-4', new AlwaysValidRutValidator());
-
-```
-
-### Validación Personalizada de Rut
-El `Module11RutValidator` no es más que la implementación del validador clásico de Rut,
-el algoritmo de módulo 11. Esto verifica que un Rut es algoritmicamente correcto, pero 
-no valida que es real.
-
-Por ello, proveemos la interfaz `RutValidator`. Con ella, puedes crear tus propias
-reglas de validación, como llamar a un web service o consultar una base de datos
-para verificar si un Rut es real o no. Te recomiendo mirar la interfaz para
-implementarla correctamente.
-
-De todas formas, aquí hay un ejemplo que va a buscar un rut a un web service.
-
-```php
-<?php
-
-use MNC\ChileanRut\Validator\RutValidator;
-use MNC\ChileanRut\Rut;
-use MNC\ChileanRut\Exception\InvalidRutException;
-use App\Rut\WebServiceRutChecker;
-
-class MyCustomRutValidator implements RutValidator
-{
-    private $rutChecker;
-    
-    /**
-     * MyCustomRutValidator constructor.
-     * @param WebServiceRutChecker $rutChecker
-     */
-    public function __construct(WebServiceRutChecker $rutChecker) 
-    {
-        $this->rutChecker = $rutChecker;
-    }
-    
-    /**
-     * @param Rut $rut
-     */
-    public function validate(Rut $rut) : void
-    {
-        // Por debajo, esta clase ficticia haría una llamada a un web service preguntando
-        // si el Rut existe.
-        if ($this->rutChecker->doesRutExist($rut->format())) {
-            return;
-        }
-        throw new InvalidRutException($rut, 'This rut does not exist');
-    }
-}
-
-```
-
-> NOTA: La implementación de cualquier validador DEBE arrojar un InvalidRutException cuando
-el Rut no es válido. De lo contrario, el Rut se toma como válido.
-
-### Usando múltiples validadores
-Proveemos un `ChainRutValidator` que puedes usar para validar un rut contra múltiples
-validadores. Esto permite ejecutar cadenas de validación, como ver primero si un rut es
-válido algorítmicamente antes de verificarlo contra un web service.
-
-Usarlo es simple:
-
-```php
-<?php
-
-use MNC\ChileanRut\Rut;
-use MNC\ChileanRut\Validator\ChainRutValidator;
-use MNC\ChileanRut\Validator\SimpleRutValidator;
-use App\Rut\DatabaseRutValidator;
-
-$chainValidator = new ChainRutValidator(
-    new SimpleRutValidator(),
-    new DatabaseRutValidator()
-);
-
-$rut = new Rut('14.245.245-2');
-
-$chainValidator->validate($rut);
-```
-
-### Formateando Ruts a String
-
-Una vez creado el objeto Rut, puedes formatearlo a string en el formato que tu quieras.
-Esto se hace a través del método format y cómo parámetro acepta el valor
-de una de las constantes `FORMAT_` de la clase Rut.
+Existen muchas formas distintas de formatear un rut y esta librería soporta muchas
+de ellas. El método format devuelve un objeto al cual puedes encadenar llamadas para
+formatear el rut y luego castearlo a un string. La interfaz es encadenable para que
+puedas combinar las opciones de formato como quieras.
 
 ```php
 <?php
 
 use MNC\ChileanRut\Rut;
 
-$rut = new Rut('34244223-4');
+$rut = Rut::parse('23.546.565-4');
 
-echo $rut->format(Rut::FORMAT_CLEAR);       // Va a imprimir 342442234
-echo $rut->format(Rut::FORMAT_READABLE);    // Va a imprimir 34.244.223-4
-echo $rut->format(Rut::FORMAT_HYPHENED);    // Va a imprimir 34244223-4
-echo $rut->format(Rut::FORMAT_HIDDEN);      // Va a imprimir 34.***.***-4
+echo $rut->format()->hyphened();                            // 23546565-4
+echo $rut->format()->dotted()->hyphened();                  // 23.546.565-2
+echo $rut->format()->dotted()->hyphened()->obfuscated();    // **.***.565-2
+echo $rut->format()->obfuscated()->hyphened();              // *****565-2
+echo $rut->format()->obfuscated();                          // *****5652
 ```
 
-### Utilidades
-Esta librería provee una clase llamada `CorrelativeUtils` que tiene algunas utilidades
-interesantes. Posee tres métodos:
-
-```php
-<?php
-
-use MNC\ChileanRut\Util\CorrelativeUtils;
-
-// Este método devuelve el digito verificador de un correlativo.
-CorrelativeUtils::findVerifierDigit('34525252');
-
-// Este método devuelve una instancia de Rut válida, sólo con el correlativo.
-CorrelativeUtils::createValidRutOnlyFromCorrelative('34525252');
-
-// Este método devuelve instancia de Rut autogenerada algoritmicamente válida.
-CorrelativeUtils::autoGenerateValidRut();
-```
-
-## Integraciones con Liberías de Terceros
+## Integraciones con Librerías de Terceros
 
 ### Doctrine DBAL
-Esta libería provee un custom type para doctrine llamado `RutType`. Puedes registrarla
-en el Dbal para usarla en tus mappings de doctrine y automáticamente mappear tu
-el valor de tu db a un objeto rut.
+Esta librería provee dos [*Custom Types*](https://www.doctrine-project.org/projects/doctrine-orm/en/2.7/cookbook/custom-mapping-types.html)
+para Doctrine, con el objetivo de que puedas mapear tus objetos `Rut` fácilmente
+a una base de datos relacional.
 
-### Symfony Validator
-Además, esta libería cuenta con un validador para Symfony Validator, que te 
-permite beneficiarte de las anotaciones del componente de validación de Symfony.
-Como dependencia opcional necesita una instancia de `RutValidator`. Si ninguna es proveída,
-se utiliza el `SimpleRutValidator`. Solo puedes usar el validador contra una instancia de `Rut`.
+El `MNC\ChileanRut\Doctrine\RutType` mapeara tu RUT a una columna VARCHAR.
+El string se guarda con puntos y guion. Ex: `16.894.365-2`. Es una forma no tan
+eficiente de guardar los RUTS (en términos de espacio), pero ayuda mucho cuando
+se visualiza o exporta la base de datos a otras fuentes.
 
-### Symfony Form Type
-Por último, esta libería cuenta con un Symfony Form Type que puedes añadir en tus
-formularios HTML, para que puedas autoinstanciar la clase y poner lógica de 
-validación en ella sin problema, y añadirla a tus otros tipos.
+El `MNC\ChileanRut\Doctrine\NumericRutType` mapeara tu RUT a una columna INTEGER.
+El numero se guarda sin digito verificador y es recalculado cuando la columna
+es transformada a un valor PHP. Esta forma de guardar ruts es muy eficiente (en
+términos de espacio), pero cuesta comparar y leer los números si visualizas o
+exportas los registros en la base de datos.
+
+Por supuesto, puedes elegir el `Type` que más se ajuste a tus necesidades.
 
 ## FAQ
 
 ### ¿Cómo nació y por qué esta librería?
-Esta libería nace de la necesidad de estandarizar una clase Rut común para todos mis proyectos
-PHP.
-Si bien es cierto, hay muchas liberías con implementaciones de Rut chilenos en PHP,
+Esta librería nace de la necesidad de estandarizar una clase Rut común para todos
+mis proyectos PHP.
+
+Si bien es cierto, hay muchas librerías con implementaciones de Rut chilenos en PHP,
 muchas de ellas tienen notorias deficiencias:
 
 1. No están testeadas unitariamente,
-2. No separan bien responsabilidades, como la lógica de validación con la de instanciación.
-3. No proveen validación extensible por medio de interfaces, limitando la validación
-solo a ser algorítmica.
-4. Están acopladas a un framework
-5. No proveen herramientas ni integraciones con librerías de terceros.
+2. No tienen un buen diseño y sus apis tienen efectos secundarios.
+3. Están acopladas a un framework (Laravel Rut y otras hierbas)
+4. No proveen herramientas ni integraciones con librerías de terceros.
 
-### ¿Por qué PHP 7.1?
-El fin del soporte de PHP 5.6 será a fines de 2018. PHP 7.1 es una de las últimas
-versiones estables, y me beneficio mucho de su sistema de tipado estricto en esta libería.
-
+### ¿Por qué PHP 7.4?
+PHP 7.3 ya no tiene mucho tiempo de soporte y 8.0 esta ad portas de ser lanzado. Hay que
+empujar el ecosistema hacia adelante.

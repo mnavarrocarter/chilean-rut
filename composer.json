@@ -11,15 +11,14 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^7.1"
+        "php": "^7.4"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.12",
-        "phpunit/phpunit": "^7.3",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "phpunit/phpunit": "^9.0",
         "doctrine/dbal": "^2.5",
-        "symfony/form": "^3.4|^4.0",
-        "symfony/validator": "^3.4|^4.0",
-        "symfony/var-dumper": "^4.1"
+        "symfony/var-dumper": "^5.1",
+        "vimeo/psalm": "^4.2"
     },
     "autoload": {
         "psr-4": {
@@ -28,7 +27,15 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "MNC\\ChileanRut\\Tests\\": "tests"
+            "MNC\\ChileanRut\\": "tests"
         }
+    },
+    "scripts": {
+        "lint": "php-cs-fixer fix --allow-risky=yes",
+        "pr": [
+            "php-cs-fixer fix --dry-run -vvv",
+            "phpunit --testdox --coverage-text",
+            "psalm --stats"
+        ]
     }
 }
