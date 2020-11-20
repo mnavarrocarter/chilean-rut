@@ -1,193 +1,139 @@
 <?php
 
-/*
- * This file is part of the MNC\ChileanRut library.
+declare(strict_types=1);
+
+/**
+ * @project Chilean Rut
+ * @link https://github.com/mnavarrocarter/chilean-rut
+ * @package mnavarrocarter/chilean-rut
+ * @author Matias Navarro-Carter mnavarrocarter@gmail.com
+ * @license MIT
+ * @copyright 2020 Matias Navarro Carter
  *
- * (c) Matías Navarro Carter <mnavarrocarter@gmail.com>
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
 namespace MNC\ChileanRut;
 
-use MNC\ChileanRut\Validator\Module11RutValidator;
-use MNC\ChileanRut\Validator\RutValidator;
-
 /**
  * Rut represents a the Chilean National ID Number.
  *
- * All residents of Chile are uniquely identified by one of these.
- *
- * @author Matías Navarro Carter <mnavarro@option.cl>
+ * All residents of Chile are uniquely identified by one of these and it is
+ * mainly used for tax purposes.
  */
 class Rut
 {
-    public const FORMAT_HYPHENED = 0;   // 14533535-5
-    public const FORMAT_CLEAR = 1;      // 145335355
-    public const FORMAT_READABLE = 2;   // 14.533.535-5
-    public const FORMAT_HIDDEN = 3;     // 17.***.***-5
+    private const VALID_VERIFIERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'K'];
 
     /**
-     * @var string
+     * The actual RUT number.
      */
-    private $value;
+    private int $number;
     /**
-     * @var string
+     * The RUT verifier digit.
      */
-    private $dv;
+    private string $verifier;
+
+    public static function parse(string $rut): Rut
+    {
+        // Remove space, dots and hyphens
+        $rut = str_replace([' ', '.', '-'], '', $rut);
+
+        return new self(
+            (int) substr($rut, 0, -1),
+            substr($rut, -1)
+        );
+    }
+
+    /**
+     * Creates a valid rut out of a number.
+     */
+    public static function create(int $number): Rut
+    {
+        $verifier = self::calculateVerifier($number);
+
+        return new Rut($number, $verifier);
+    }
 
     /**
      * Rut constructor.
      *
-     * @param string            $rut
-     * @param RutValidator|null $validator if provided validates the Rut
+     * @throws InvalidRut if the verifier digit is invalid
      */
-    public function __construct(string $rut, RutValidator $validator = null)
+    public function __construct(int $number, string $verifier)
     {
-        $sanitized = $this->sanitize($rut);
-        $this->value = substr($sanitized, 0, -1);
-        $this->dv = $sanitized[\strlen($sanitized) - 1];
-
-        if (!$validator instanceof RutValidator) {
-            $validator = new Module11RutValidator();
-        }
-        $validator->validate($this);
+        $this->number = $number;
+        $this->verifier = strtoupper($verifier);
+        $this->guard();
     }
 
-    /**
-     * Casts the Rut object into a string.
-     *
-     * @return string
-     */
-    public function __toString(): string
+    public function getNumber(): int
     {
-        return $this->format(self::FORMAT_READABLE);
+        return $this->number;
     }
 
-    /**
-     * Creates a new Rut instance from the correlative and the verifier digit.
-     *
-     * @param string            $correlative
-     * @param string            $verifierDigit
-     * @param RutValidator|null $validator
-     *
-     * @return Rut
-     */
-    public static function fromParts(string $correlative, string $verifierDigit, RutValidator $validator = null): Rut
+    public function getVerifier(): string
     {
-        return new self($correlative.$verifierDigit, $validator);
-    }
-
-    /**
-     * Creates a new instance of Rut from a string.
-     *
-     * @param string            $rut
-     * @param RutValidator|null $validator
-     *
-     * @return Rut
-     */
-    public static function fromString(string $rut, RutValidator $validator = null): Rut
-    {
-        return new self($rut, $validator);
+        return $this->verifier;
     }
 
     /**
      * Compares whether a Rut is equal to another or not.
-     *
-     * @param Rut $rut
-     *
-     * @return bool
      */
-    public function isEqualTo(Rut $rut): bool
+    public function equals(Rut $rut): bool
     {
-        return $this->format() === $rut->format();
+        return $this->number === $rut->number;
     }
 
     /**
      * Formats a Rut to a string.
-     *
-     * @param int $format one of the FORMAT_ constants
-     *
-     * @return string
      */
-    public function format(int $format = 0): string
+    public function format(): FormattedRut
     {
-        switch ($format) {
-            case self::FORMAT_HYPHENED:
-                return $this->value.'-'.$this->dv;
-                break;
-            case self::FORMAT_CLEAR:
-                return $this->value.$this->dv;
-                break;
-            case self::FORMAT_READABLE:
-                return $this->formatReadable();
-                break;
-            case self::FORMAT_HIDDEN:
-                return $this->formatHidden();
-                break;
-            default:
-                throw new \InvalidArgumentException(
-                    sprintf(
-                        'Argument provided for %s method of class %s is invalid.',
-                        __METHOD__,
-                        __CLASS__
-                    )
-                );
+        return new FormattedRut($this);
+    }
+
+    private function guard(): void
+    {
+        // Check if rut is between zero and 999.999.999
+        if ($this->number < 0 || $this->number > 999_999_999) {
+            throw InvalidRut::number();
+        }
+        // Check if the verifier digit is in the range of valid ones
+        if (!in_array($this->verifier, self::VALID_VERIFIERS, true)) {
+            throw InvalidRut::digit($this->verifier);
+        }
+        // Check the verifier is algorithmically correct
+        if ($this->verifier !== self::calculateVerifier($this->number)) {
+            throw InvalidRut::digit($this->verifier);
         }
     }
 
     /**
-     * Returns the correlative number of the Rut.
-     *
-     * @return string
+     * Calculates a verifier digit from a number.
      */
-    public function getCorrelative(): string
+    private static function calculateVerifier(int $number): string
     {
-        return $this->value;
-    }
+        /** @var list<int> $sequence */
+        $sequence = array_filter(array_reverse(str_split((string) $number)), 'intval');
+        $x = 2;
+        $s = 0;
+        foreach ($sequence as $digit) {
+            if ($x > 7) {
+                $x = 2;
+            }
+            $s += $digit * $x;
+            ++$x;
+        }
+        $dv = 11 - ($s % 11);
+        if ($dv === 10) {
+            $dv = 'K';
+        }
+        if ($dv === 11) {
+            $dv = '0';
+        }
 
-    /**
-     * Returns the verifier digit of the Rut.
-     *
-     * @return string
-     */
-    public function getVerifierDigit(): string
-    {
-        return $this->dv;
-    }
-
-    /**
-     * Sanitizes a Rut string.
-     *
-     * @param string $value
-     *
-     * @return string
-     */
-    private function sanitize(string $value): string
-    {
-        return str_replace(['.', ',', '-'], '', strtoupper(trim($value)));
-    }
-
-    /**
-     * Helper to format the Rut as FORMAT_READABLE.
-     *
-     * @return string
-     */
-    private function formatReadable(): string
-    {
-        return sprintf('%s-%s', number_format($this->value, 0, '', '.'), $this->dv);
-    }
-
-    /**
-     * Helper to format the Rut as FORMAT_HIDDEN.
-     *
-     * @return string
-     */
-    private function formatHidden(): string
-    {
-        $readable = $this->formatReadable();
-        $exploded = explode('.', $readable);
-
-        return sprintf('%s.***.***-%s', $exploded[0], $this->dv);
+        return (string) $dv;
     }
 }
