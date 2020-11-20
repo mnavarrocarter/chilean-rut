@@ -30,9 +30,9 @@ jobs:
           ini-values: memory_limit=-1
           tools: composer:v2
       - name: Get Composer Cache Directory
-          id: composer-cache
-          run: |
-            echo "::set-output name=dir::$(composer config cache-files-dir)"
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
         with:
@@ -64,9 +64,9 @@ jobs:
           ini-values: memory_limit=-1
           tools: composer:v2
       - name: Get Composer Cache Directory
-          id: composer-cache
-          run: |
-            echo "::set-output name=dir::$(composer config cache-files-dir)"
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
         with:
@@ -103,9 +103,9 @@ jobs:
           ini-values: memory_limit=-1
           tools: composer:v2
       - name: Get Composer Cache Directory
-          id: composer-cache
-          run: |
-            echo "::set-output name=dir::$(composer config cache-files-dir)"
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
       - name: "Cache dependencies"
         uses: "actions/cache@v2"
         with:
