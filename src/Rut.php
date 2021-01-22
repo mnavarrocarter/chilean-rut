@@ -116,7 +116,9 @@ class Rut
     private static function calculateVerifier(int $number): string
     {
         /** @var list<int> $sequence */
-        $sequence = array_filter(array_reverse(str_split((string) $number)), 'intval');
+        $sequence = array_filter(array_reverse(str_split((string) $number)), function($d) {
+            return preg_match('/\d/',$d);
+        });
         $x = 2;
         $s = 0;
         foreach ($sequence as $digit) {
