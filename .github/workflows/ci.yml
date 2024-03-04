@@ -23,17 +23,3 @@ jobs:
       php-version: 8.2
       composer-cmd: install --ansi --no-interaction --no-progress --no-suggest --prefer-dist
     secrets: inherit
-
-  # Publishes code coverage report
-  publish-coverage:
-    name: "Publish Coverage"
-    needs: ['ci']
-    if: ${{ github.ref_name	== 'master' }}
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4

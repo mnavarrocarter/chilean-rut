@@ -16,6 +16,9 @@ jobs:
   php-checks:
     name: "PHP Checks"
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: "Checkout Code"
         uses: "actions/checkout@v2"
@@ -45,7 +48,13 @@ jobs:
         run: "composer test"
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        if: ${{ github.ref_name	== 'master' }}
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
+        if: ${{ github.ref_name	== 'master' }}
         with:
           path: '.dev/coverage'
+      - name: Deploy to GitHub Pages
+        if: ${{ github.ref_name	== 'master' }}
+        id: deployment
+        uses: actions/deploy-pages@v4

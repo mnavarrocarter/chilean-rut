@@ -27,7 +27,7 @@ formulario web y `parse` se encargará de sanitizar el string y ver si el RUT es
 ```php
 <?php
 
-use MNC\ChileanRut\Rut;
+use MNC\Rut;
 
 $rut = Rut::parse('23.546.565-4');
 ```
