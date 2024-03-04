@@ -3,33 +3,30 @@
 declare(strict_types=1);
 
 /**
- * @project Chilean Rut
+ * @project Chilean RUT
  * @link https://github.com/mnavarrocarter/chilean-rut
- * @package mnavarrocarter/chilean-rut
+ * @package castor/log
  * @author Matias Navarro-Carter mnavarrocarter@gmail.com
  * @license MIT
- * @copyright 2020 Matias Navarro Carter
+ * @copyright 2024 Matias Navarro-Carter
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace MNC\ChileanRut\Doctrine;
+namespace MNC\Rut\Doctrine;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
-use Doctrine\DBAL\Types\StringType;
-use MNC\ChileanRut\Rut;
+use Doctrine\DBAL\Types\IntegerType;
+use MNC\Rut;
 
 /**
- * Class RutTextType.
- *
- * This type maps the rut to a string and stores it with the verifier number,
- * including dots and the hyphen.
+ * Mapea el Rut a una columna integer.
  */
-class RutType extends StringType
+class NumericRutType extends IntegerType
 {
-    public const NAME = 'rut';
+    public const NAME = 'numeric-rut';
 
     public function getName(): string
     {
@@ -39,18 +36,16 @@ class RutType extends StringType
     /**
      * @param mixed $value
      *
-     * @return mixed
-     *
      * @throws ConversionException
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if ($value === null) {
-            return $value;
+            return null;
         }
 
         if ($value instanceof Rut) {
-            return (string) $value->format()->hyphened()->dotted();
+            return (string) $value->number;
         }
 
         throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['null', Rut::class]);
@@ -59,20 +54,21 @@ class RutType extends StringType
     /**
      * @param mixed $value
      *
-     * @return mixed
-     *
      * @throws ConversionException
      */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): ?Rut
     {
+        $value = parent::convertToPHPValue($value, $platform);
+
         if ($value === null) {
-            return $value;
+            return null;
         }
 
-        if (is_string($value)) {
-            return Rut::parse($value);
-        }
+        return Rut::create($value);
+    }
 
-        throw ConversionException::conversionFailedInvalidType($value, $this->getName(), ['null', 'string']);
+    public function requiresSQLCommentHint(AbstractPlatform $platform): true
+    {
+        return true;
     }
 }

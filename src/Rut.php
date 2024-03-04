@@ -3,83 +3,91 @@
 declare(strict_types=1);
 
 /**
- * @project Chilean Rut
+ * @project Chilean RUT
  * @link https://github.com/mnavarrocarter/chilean-rut
- * @package mnavarrocarter/chilean-rut
+ * @package castor/log
  * @author Matias Navarro-Carter mnavarrocarter@gmail.com
  * @license MIT
- * @copyright 2020 Matias Navarro Carter
+ * @copyright 2024 Matias Navarro-Carter
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-namespace MNC\ChileanRut;
+namespace MNC;
+
+use MNC\Rut\Verifier;
 
 /**
- * Rut represents a the Chilean National ID Number.
+ * Esta clase representa un RUT.
  *
- * All residents of Chile are uniquely identified by one of these and it is
- * mainly used for tax purposes.
+ * Una vez creado, el RUT es siempre valido
  */
-class Rut
+final readonly class Rut
 {
-    private const VALID_VERIFIERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'K'];
+    private const MAX_NUMBER = 999_999_999;
+    private const MIN_NUMBER = 0;
+
+    private function __construct(
+        public int $number,
+        public Verifier $verifier
+    ) {}
 
     /**
-     * The actual RUT number.
+     * Parsea un objeto RUT a partir de una cadena de texto.
+     *
+     * El RUT DEBE contener el digito verificador.
+     *
+     * Si no se cuenta con el verificador, el metodo create debe ser usado.
+     *
+     * @see Rut::create
+     *
+     * @throws Rut\IsInvalid si el RUT no es valido
      */
-    private int $number;
-    /**
-     * The RUT verifier digit.
-     */
-    private string $verifier;
-
     public static function parse(string $rut): Rut
     {
         // Remove space, dots and hyphens
-        $rut = str_replace([' ', '.', '-'], '', $rut);
+        $rut = \str_replace([' ', '.', '-'], '', $rut);
 
-        return new self(
-            (int) substr($rut, 0, -1),
-            substr($rut, -1)
+        return self::create(
+            (int) \substr($rut, 0, -1),
+            Verifier::fromString(\substr($rut, -1))
         );
     }
 
     /**
-     * Creates a valid rut out of a number.
-     */
-    public static function create(int $number): Rut
-    {
-        $verifier = self::calculateVerifier($number);
-
-        return new Rut($number, $verifier);
-    }
-
-    /**
-     * Rut constructor.
+     * Crea un objeto RUT.
      *
-     * @throws InvalidRut if the verifier digit is invalid
+     * El digito verificador es opcional. Cuando es recibido, es validado.
+     *
+     * Si el digito verificador no es provisto, es generado automáticamente.
+     *
+     * @throws Rut\IsInvalid si el Rut es invalido
      */
-    public function __construct(int $number, string $verifier)
+    public static function create(int $number, ?Verifier $verifier = null): self
     {
-        $this->number = $number;
-        $this->verifier = strtoupper($verifier);
-        $this->guard();
-    }
+        if ($number < self::MIN_NUMBER) {
+            throw Rut\IsInvalid::numberTooSmall($number);
+        }
 
-    public function getNumber(): int
-    {
-        return $this->number;
-    }
+        if ($number > self::MAX_NUMBER) {
+            throw Rut\IsInvalid::numberTooBig($number);
+        }
 
-    public function getVerifier(): string
-    {
-        return $this->verifier;
+        $computed = self::computeVerifier($number);
+        if ($verifier === null) {
+            return new self($number, $computed);
+        }
+
+        if ($computed !== $verifier) {
+            throw Rut\IsInvalid::rut($number, $verifier);
+        }
+
+        return new self($number, $verifier);
     }
 
     /**
-     * Compares whether a Rut is equal to another or not.
+     * Compara si un RUT es igual a otro o no.
      */
     public function equals(Rut $rut): bool
     {
@@ -87,38 +95,71 @@ class Rut
     }
 
     /**
-     * Formats a Rut to a string.
+     * Retorna el RUT en formato "12345678K".
      */
-    public function format(): FormattedRut
+    public function toString(): string
     {
-        return new FormattedRut($this);
-    }
-
-    private function guard(): void
-    {
-        // Check if rut is between zero and 999.999.999
-        if ($this->number < 0 || $this->number > 999_999_999) {
-            throw InvalidRut::number();
-        }
-        // Check if the verifier digit is in the range of valid ones
-        if (!in_array($this->verifier, self::VALID_VERIFIERS, true)) {
-            throw InvalidRut::digit($this->verifier);
-        }
-        // Check the verifier is algorithmically correct
-        if ($this->verifier !== self::calculateVerifier($this->number)) {
-            throw InvalidRut::digit($this->verifier);
-        }
+        return $this->number.$this->verifier->toString();
     }
 
     /**
-     * Calculates a verifier digit from a number.
+     *  Retorna el RUT en formato "12345678-K".
      */
-    private static function calculateVerifier(int $number): string
+    public function toSimple(): string
     {
-        /** @var list<int> $sequence */
-        $sequence = array_filter(array_reverse(str_split((string) $number)), function ($d) {
-            return preg_match('/\d/', $d);
-        });
+        return $this->number.'-'.$this->verifier->toString();
+    }
+
+    /**
+     * Retorna el RUT en formato "12.345.678-K".
+     */
+    public function toHuman(): string
+    {
+        return \number_format($this->number, 0, ',', '.').'-'.$this->verifier->toString();
+    }
+
+    /**
+     * Retorna los $n ultimos numeros del RUT.
+     *
+     * El digito verificador no es considerado.
+     */
+    public function last(int $n, string $pad = ''): string
+    {
+        $number = (string) $this->number;
+        $last = \substr($number, -$n);
+        if ($pad !== '') {
+            $last = \str_repeat($pad, \strlen($number) - $n).$last;
+        }
+
+        return $last;
+    }
+
+    /**
+     * Retorna los $n primeros numeros del RUT.
+     *
+     * El digito verificador no es considerado.
+     */
+    public function first(int $n, string $pad = ''): string
+    {
+        $number = (string) $this->number;
+        $first = \substr($number, 0, $n);
+        if ($pad !== '') {
+            $first .= \str_repeat($pad, \strlen($number) - $n);
+        }
+
+        return $first;
+    }
+
+    /**
+     * Computa el digito verificador de un RUT a partir del numero.
+     */
+    public static function computeVerifier(int $number): Verifier
+    {
+        $sequence = \array_reverse(\array_map(
+            static fn (string $d): int => (int) $d,
+            \str_split((string) $number)
+        ));
+
         $x = 2;
         $s = 0;
         foreach ($sequence as $digit) {
@@ -128,14 +169,7 @@ class Rut
             $s += $digit * $x;
             ++$x;
         }
-        $dv = 11 - ($s % 11);
-        if ($dv === 10) {
-            $dv = 'K';
-        }
-        if ($dv === 11) {
-            $dv = '0';
-        }
 
-        return (string) $dv;
+        return Verifier::from(11 - ($s % 11));
     }
 }
