@@ -1,0 +1,27 @@
+name: "mnavarro"
+
+services:
+
+  chilean-rut: &php
+    image: mnavarro/chilean-rut:dev
+    build:
+      context: .dev/docker/php
+      dockerfile: Dockerfile
+      target: dev
+      args:
+        UID: ${UID:-1000}
+    user: ${UID:-1000}
+    restart: unless-stopped
+    depends_on:
+      chilean-rut-init:
+        condition: service_completed_successfully
+    working_dir: /mnavarro/chilean-rut
+    volumes:
+      - ./:/mnavarro/chilean-rut
+    command: ["php", "-S", "0.0.0.0:8000", "-t", ".dev/coverage"]
+
+  chilean-rut-init:
+    <<: *php
+    depends_on: []
+    restart: no
+    command: [".dev/init"]
