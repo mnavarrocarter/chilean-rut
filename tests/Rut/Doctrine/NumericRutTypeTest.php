@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * @project Chilean RUT
  * @link https://github.com/mnavarrocarter/chilean-rut
- * @package castor/log
+ * @package mnavarrocarter/chilean-rut
  * @author Matias Navarro-Carter mnavarrocarter@gmail.com
  * @license MIT
  * @copyright 2024 Matias Navarro-Carter
@@ -75,7 +75,7 @@ class NumericRutTypeTest extends TestCase
     }
 
     #[Test]
-    public function it_returns_true_for_comment(): void
+    public function itReturnsTrueForComment(): void
     {
         $platform = $this->createMock(AbstractPlatform::class);
         $this->assertTrue(Type::getType(NumericRutType::NAME)->requiresSQLCommentHint($platform));

@@ -10,18 +10,15 @@ on:
       composer-cmd:
         description: 'Command to install dependencies'
         type: string
-        default: 'install --ansi --no-interaction --no-progress --no-suggest --prefer-dist'
+        default: 'install --ansi --no-interaction --no-progress --prefer-dist'
 
 jobs:
   php-checks:
     name: "PHP Checks"
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: "Checkout Code"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v4"
       - name: "Install PHP"
         uses: "shivammathur/setup-php@v2"
         with:
@@ -31,9 +28,9 @@ jobs:
           tools: composer:v2
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        run: echo "dir=$(composer config cache-dir)" >> "$GITHUB_OUTPUT"
       - name: "Cache dependencies"
-        uses: "actions/cache@v2"
+        uses: "actions/cache@v4"
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}"
@@ -46,15 +43,33 @@ jobs:
         run: "composer psalm:gh"
       - name: "Run Test Suite"
         run: "composer test"
+      - name: Upload coverage artifact
+        if: github.ref_name == 'master'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: '.dev/coverage'
+
+  deploy-coverage:
+    name: "Deploy Coverage"
+    if: github.ref_name == 'master'
+    needs: php-checks
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download coverage artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage
+          path: .dev/coverage
       - name: Setup Pages
-        uses: actions/configure-pages@v4
-        if: ${{ github.ref_name	== 'master' }}
-      - name: Upload artifact
+        uses: actions/configure-pages@v5
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
-        if: ${{ github.ref_name	== 'master' }}
         with:
           path: '.dev/coverage'
       - name: Deploy to GitHub Pages
-        if: ${{ github.ref_name	== 'master' }}
         id: deployment
         uses: actions/deploy-pages@v4

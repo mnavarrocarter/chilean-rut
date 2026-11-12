@@ -22,7 +22,8 @@ el método `Rut::parse()`. Confiadamente, puedes poner el valor directamente de 
 formulario web y `parse` se encargará de sanitizar el string y ver si el RUT es válido.
 
 > NOTA: Un Rut se considera válido cuando su dígito verificador es algorítmicamente válido
-> para el número. Esta libreria no puede validar que el Rut existe realmente.
+> para el número. Esta librería no puede validar que el Rut existe realmente.
+> El número del RUT debe estar entre 0 y 99.999.999; el verificador `k` también se acepta como `K`.
  
 ```php
 <?php
@@ -87,6 +88,7 @@ echo $rut->first(4, pad: '*');  // 2354****
 Esta librería provee dos [*Custom Types*](https://www.doctrine-project.org/projects/doctrine-orm/en/2.7/cookbook/custom-mapping-types.html)
 para Doctrine, con el objetivo de que puedas mapear tus objetos `Rut` fácilmente
 a una base de datos relacional.
+La integración requiere `doctrine/dbal`; puedes instalarla con `composer require doctrine/dbal`.
 
 `MNC\Rut\Doctrine\RutType` mapea tu RUT a una columna VARCHAR.
 El string se guarda con puntos y guion. Ex: `16.894.365-2`. Es una forma no tan

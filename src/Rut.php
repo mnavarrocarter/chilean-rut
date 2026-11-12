@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * @project Chilean RUT
  * @link https://github.com/mnavarrocarter/chilean-rut
- * @package castor/log
+ * @package mnavarrocarter/chilean-rut
  * @author Matias Navarro-Carter mnavarrocarter@gmail.com
  * @license MIT
  * @copyright 2024 Matias Navarro-Carter
@@ -25,13 +25,18 @@ use MNC\Rut\Verifier;
  */
 final readonly class Rut
 {
-    private const MAX_NUMBER = 999_999_999;
+    private const MAX_NUMBER = 99_999_999;
     private const MIN_NUMBER = 0;
 
     private function __construct(
         public int $number,
         public Verifier $verifier
     ) {}
+
+    public function __toString(): string
+    {
+        return $this->toString();
+    }
 
     /**
      * Parsea un objeto RUT a partir de una cadena de texto.

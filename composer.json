@@ -3,8 +3,6 @@
     "description": "PHP Rut Value Object with validation utilities, doctrine type, and other cool features.",
     "type": "library",
     "license": "MIT",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "authors": [
         {
             "name": "Matias Navarro-Carter",
@@ -26,10 +24,13 @@
         "php": ">=8.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.5",
-        "friendsofphp/php-cs-fixer": "^3.49",
-        "vimeo/psalm": "^5.22",
-        "doctrine/dbal": "^2.10.1|^3.0"
+        "phpunit/phpunit": "^11.5",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "vimeo/psalm": "^6.5",
+        "doctrine/dbal": "^3.8"
+    },
+    "suggest": {
+        "doctrine/dbal": "Required to use the Doctrine DBAL types."
     },
     "scripts": {
         "pr": ["@fmt", "@psalm", "@test"],
