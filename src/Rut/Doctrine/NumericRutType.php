@@ -5,7 +5,7 @@ declare(strict_types=1);
 /**
  * @project Chilean RUT
  * @link https://github.com/mnavarrocarter/chilean-rut
- * @package castor/log
+ * @package mnavarrocarter/chilean-rut
  * @author Matias Navarro-Carter mnavarrocarter@gmail.com
  * @license MIT
  * @copyright 2024 Matias Navarro-Carter

@@ -1,4 +1,4 @@
-FROM alpine:3.18 as base
+FROM alpine:3.21 as base
 
 ARG UID=1000
 ARG USER=mnavarro
